@@ -48,11 +48,11 @@
 
 ### Wireframe
 
-![image.png](image.png)
+![image.png](wireframe.png)
 
 ### Mockup
 
-![image.png](image%201.png)
+![image.png](mockup.png)
 
 ### User Flow
 
