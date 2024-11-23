@@ -3,4 +3,4 @@ A fitness app where users log their exercises and earn points, badges, or levels
 - Proposal and presentation are under the sprint folder
 
 This project includes components from the Health Connect GitHub repository, licensed under the Apache License, Version 2.0.
-You can view the original repository at: https://github.com/android/health-connect
+You can view the original repository at: [https://github.com/android/health-connect](https://github.com/android/android-health-connect-codelab.git)
