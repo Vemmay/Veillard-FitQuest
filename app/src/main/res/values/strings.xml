@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">FitQuest</string>
+
+    <!-- Screen titles -->
+    <string name="welcome_screen">Welcome screen</string>
+    <string name="home_screen">Home screen</string>
+    <string name="leaderboard_screen">Leaderboard screen</string>
+    <string name="challenge_screen">Challenge screen</string>
+    <string name="exercise_sessions">Exercise sessions</string>
+    <string name="exercise_session_detail">Exercise session detail</string>
+    <string name="profile_screen">Profile screen</string>
+    <string name="privacy_policy">Privacy policy</string>
+
+    <!-- Not installed on device -->
+    <string name="not_installed_tag">not_installed_tag</string>
+    <string name="market_url">market://details</string>
+    <string name="health_connect_package">com.google.android.apps.healthdata</string>
+    <string name="onboarding_url">healthconnect://onboarding</string>
+    <string name="not_installed_description">
+        Health Connect is supported on this device, but is not currently installed.
+    </string>
+    <string name="not_installed_link_text">
+        To use this sample, and other apps using Health Connect, please install the Health Connect
+        package from Google Play.
+    </string>
+
+    <!-- Not supported on device -->
+    <string name="not_supported_tag">not_supported_tag</string>
+    <string name="not_supported_url">https://developer.android.com/health-connect</string>
+    <string name="not_supported_description">
+        Health Connect is only supported on Android devices running API level %1$d or above.
+    </string>
+    <string name="not_supported_link_text">
+        Please visit the Health Connect guides to learn more about device compatibility and using
+        Health Connect.
+    </string>
+
+    <string name="permissions_button_label">Request permissions</string>
+    <string name="not_available_abbrev">N/A</string>
+    <string name="menu">menu</string>
+
+    <!-- Exercise Session screen -->
+    <string name="insert_exercise_session">Insert session</string>
+    <string name="no_title">[No title]</string>
+    <string name="delete_button">Delete</string>
+    <string name="request_background_read">Request Background Read</string>
+    <string name="background_read_is_not_available">Background Read Is Not Available</string>
+    <string name="read_steps_in_background">Read Steps In Background</string>
+
+    <!-- Exercise type -->
+    <string name="running">Running</string>
+    <string name="walking">Walking</string>
+    <string name="other">Other</string>
+
+    <!-- Exercise Session detail screen -->
+    <string name="total_active_duration">Total active duration</string>
+    <string name="total_steps">Total steps</string>
+    <string name="total_distance">Total distance</string>
+    <string name="total_energy">Total calories</string>
+    <string name="hr_stats">HR stats (bpm)</string>
+    <string name="hr_series">HR series (bpm)</string>
+    <string name="speed_stats">Speed stats (m/s)</string>
+    <string name="speed_series">Speed series (m/s)</string>
+    <string name="min_label">Min</string>
+    <string name="max_label">Max</string>
+    <string name="avg_label">Avg</string>
+    <string name="label_and_value">%1$s: %2$s</string>
+    <string name="your_web_client_id">1080881700488-klcn0n8e85vikfqfmvfnc9mki1l53hl8.apps.googleusercontent.com</string>
+
+    <!-- Profile screen -->
+</resources>
