@@ -2,10 +2,8 @@ package com.example.fitquest
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,6 +15,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import com.example.fitquest.component.compose_icons.Directions_run
+import com.example.fitquest.component.compose_icons.Settings_account_box
+import com.example.fitquest.component.compose_icons.Trophy
 import com.example.fitquest.data.HealthConnectManager
 import com.example.fitquest.data.showExceptionSnackbar
 import com.example.fitquest.screens.ChallengeScreen
@@ -37,10 +38,10 @@ import com.example.fitquest.screens.WelcomeScreen
  */
 sealed class Screen(val route: String, val titleId: Int, val icon: ImageVector) {
     data object WelcomeScreen : Screen("welcome", R.string.home_screen, Icons.Filled.Home)
-    data object ExerciseSessions : Screen("exercise_sessions", R.string.exercise_sessions, Icons.Filled.AddCircle)
-    data object Leaderboard : Screen("exercise_session_detail", R.string.leaderboard_screen, Icons.Filled.Star)
+    data object ExerciseSessions : Screen("exercise_sessions", R.string.exercise_sessions, Directions_run)
+    data object Leaderboard : Screen("exercise_session_detail", R.string.leaderboard_screen, Trophy)
     data object Challenge : Screen("challenge", R.string.challenge_screen, Icons.Filled.Build)
-    data object Profile : Screen("profile", R.string.profile_screen, Icons.Filled.Build)
+    data object Profile : Screen("profile", R.string.profile_screen, Settings_account_box)
     data object ExerciseSessionDetail : Screen("exercise_session_detail", R.string.exercise_session_detail, Icons.Filled.Build)
     data object PrivacyPolicy : Screen("privacy_policy", R.string.privacy_policy, Icons.Filled.Build)
 }

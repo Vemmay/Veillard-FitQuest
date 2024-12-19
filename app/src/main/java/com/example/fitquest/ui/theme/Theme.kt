@@ -1,6 +1,5 @@
 package com.example.fitquest.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -18,19 +18,22 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Blue_bell,                // Main interactive color
+    onPrimary = Color.White,            // Text/icons on primary color
+    secondary = Pacific_cyan,           // Secondary actions
+    onSecondary = Color.White,          // Text/icons on secondary color
+    tertiary = Non_Photo_blue,          // Accents or highlights
+    onTertiary = Color.Black,           // Text/icons on tertiary color
+    secondaryContainer = DarkerPacificCyan,  // Darker background for secondary container
+    onSecondaryContainer = Color.White,  // Text/icons for secondary container
+    tertiaryContainer = Light_cyan,     // Container for tertiary content
+    onTertiaryContainer = Color.Black,   // Text/icons for tertiary container
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    background = Light_cyan,       // App background color
+    onBackground = Federal_blue,   // Text/icons on the background color
+
+    surface = Non_Photo_blue,      // Elevated elements like cards or dialogs
+    onSurface = Federal_blue       // Text/icons on surface color
 )
 
 @Composable

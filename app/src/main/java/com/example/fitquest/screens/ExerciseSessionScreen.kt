@@ -17,20 +17,35 @@ package com.example.fitquest.screens
  */
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.records.ExerciseSessionRecord
@@ -38,8 +53,7 @@ import com.example.fitquest.ExerciseInput
 import com.example.fitquest.ExerciseSessionViewModel
 import com.example.fitquest.R
 import com.example.fitquest.component.ExerciseInputScreen
-import com.example.fitquest.component.ExerciseSessionRow
-import java.time.ZonedDateTime
+import com.example.fitquest.ui.theme.PurpleGrey40
 import java.util.UUID
 
 /**
@@ -84,44 +98,98 @@ fun ExerciseSessionScreen(
     }
 
     if (uiState != ExerciseSessionViewModel.UiState.Uninitialized) {
-        LazyColumn(
+        Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Log.d("perm", "Permissions granted: $permissionsGranted")
             if (!permissionsGranted) {
-                item {
-                    Button(
-                        onClick = {
-                            onPermissionsLaunch(permissions)
-                        }
-                    ) {
-                        Text(text = stringResource(R.string.permissions_button_label))
-                    }
+                Button(onClick = {
+                    onPermissionsLaunch(permissions)
+                }) {
+                    Text(text = stringResource(R.string.permissions_button_label))
                 }
             } else {
-                item {
-                    ExerciseInputScreen(
-                        exerciseInput = exerciseInput,
-                        onInsertClick = { onInsertClick(exerciseInput) }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+                var showPopup by remember { mutableStateOf(false) }
+                Button(onClick = { showPopup = true }) {
+                    Text(text = stringResource(R.string.exercise_sessions))
                 }
 
-                items(items = sessionsList, key = { it.metadata.id }) {
-                    session ->
-                    ExerciseSessionRow(
-                        ZonedDateTime.ofInstant(session.startTime, session.startZoneOffset),
-                        ZonedDateTime.ofInstant(session.endTime, session.endZoneOffset),
-                        session.metadata.id,
-                        session.title ?: stringResource(R.string.no_title),
-                        onDetailsClick = { uid ->
-                            onDetailsClick(uid)
-                        }
-                    )
+                if (showPopup) {
+                    ExerciseInputScreen(exerciseInput = exerciseInput,
+                        onInsertClick = { onInsertClick(exerciseInput) },
+                        onDismiss = { showPopup = false })
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ExerciseGrid(sessionsList)
+            }
+
+        }
+    }
+}
+
+@Composable
+fun ExerciseGrid(sessionsList: List<ExerciseSessionRecord>){
+    if(sessionsList.isNotEmpty()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Exercise Sessions",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(15.dp)
+            )
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 100.dp),
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                items(sessionsList.size) {
+                    SessionItem(sessionsList[it])
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun SessionItem(session: ExerciseSessionRecord) {
+    Box(
+        modifier = Modifier
+            .padding(8.dp)
+            .aspectRatio(1f) // Ensures items are square-shaped in the grid
+            .clip(RoundedCornerShape(10.dp))
+            .background(Color(PurpleGrey40.value))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = session.title ?: stringResource(R.string.no_title), // Display the session title or fallback text
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White,
+                modifier = Modifier.align(Alignment.Start)
+            )
+
+            // Session time and name displayed at the bottom
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                // Display session start and end time
+//                ExerciseSessionInfoColumn(
+//                    start = session.startTime,
+//                    end = session.endTime,
+//                    uid = session.uid,
+//                    name = session.title ?: "No title",
+//                    onClick = { /* Handle the click event if needed */ }
+//                )
+//            }
         }
     }
 }
