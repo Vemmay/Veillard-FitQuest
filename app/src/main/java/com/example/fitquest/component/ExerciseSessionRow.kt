@@ -15,94 +15,99 @@ package com.example.fitquest.component
  * limitations under the License.
  */
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.records.ExerciseSessionRecord
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.fitquest.data.ExerciseImages
 import com.example.fitquest.data.ExerciseType
-import com.example.fitquest.ui.theme.FitQuestTheme
+import com.example.fitquest.data.formatDisplayTimeStartEnd
 import java.time.ZonedDateTime
-import java.util.UUID
 
-/**
- * Creates a row to represent an [ExerciseSessionRecord]
- */
 @Composable
-fun ExerciseSessionRow(
+fun SessionItem(
     start: ZonedDateTime,
     end: ZonedDateTime,
-    uid: String,
     name: String,
-    onDetailsClick: (String) -> Unit = {},
+    type: Int
 ) {
-    Row(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(10.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
-        ExerciseSessionInfoColumn(
-            start = start,
-            end = end,
-            uid = uid,
-            name = name,
-            type = ExerciseType,
-            onClick = onDetailsClick
-        )
-    }
-}
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        ) {
+            //picture of exercise
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(ExerciseImages.getImageUrl(type))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "placeholder",
+                modifier = Modifier
+                    .size(70.dp)
+                    .clip(
+                        RoundedCornerShape(10.dp)
+                    ),
+                contentScale = ContentScale.Crop
+            )
 
-/**
- * Displays summary information about the [ExerciseSessionRecord]
- */
-@Composable
-fun ExerciseSessionInfoColumn(
-    start: ZonedDateTime,
-    end: ZonedDateTime,
-    uid: String,
-    name: String,
-    type: ExerciseType.Companion,
-    onClick: (String) -> Unit = {},
-) {
-    Column(
-        modifier = Modifier.clickable {
-            onClick(uid)
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // column for title and time and label
+            Column( Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceBetween){
+                Text(
+                    text = name.uppercase(), // Display the session title or fallback text
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+
+                Text(
+                    text = ExerciseType.getExerciseType(type),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Session time and name displayed at the bottom
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    // Display session start and end time
+                    Text(
+                        text = formatDisplayTimeStartEnd( start.toInstant(), start.offset, end.toInstant(), end.offset),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    )
+                }
+            }
         }
-    ) {
-        Text(
-            color = MaterialTheme.colorScheme.primary,
-            text = "${start.toLocalTime().hour%24}:${start.minute} - ${end.toLocalTime().hour}:${end.minute}",
-            style = MaterialTheme.typography.labelMedium
-        )
-        Text(name)
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(ExerciseType.toExerciseType(name).titleResId.toString())
-        //Text(uid)
-    }
-}
-
-@Preview
-@Composable
-fun ExerciseSessionRowPreview() {
-    FitQuestTheme {
-        ExerciseSessionRow(
-            ZonedDateTime.now().minusMinutes(30),
-            ZonedDateTime.now(),
-            UUID.randomUUID().toString(),
-            "Running"
-        )
     }
 }

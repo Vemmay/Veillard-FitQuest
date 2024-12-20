@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
+import com.example.fitquest.component.ExerciseSessionDetailViewModel
 import com.example.fitquest.component.heartRateSeries
 import com.example.fitquest.data.ExerciseSessionData
 import java.time.Duration

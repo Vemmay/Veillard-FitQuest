@@ -1,4 +1,4 @@
-package com.example.fitquest
+package com.example.fitquest.component
 
 // File citation
 /*

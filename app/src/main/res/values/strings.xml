@@ -66,6 +66,8 @@
     <string name="avg_label">Avg</string>
     <string name="label_and_value">%1$s: %2$s</string>
     <string name="your_web_client_id">1080881700488-klcn0n8e85vikfqfmvfnc9mki1l53hl8.apps.googleusercontent.com</string>
+    <string name="add_exercise_session">Add Exercise</string>
+    <string name="sign_in">Sign Up</string>
 
     <!-- Profile screen -->
 </resources>

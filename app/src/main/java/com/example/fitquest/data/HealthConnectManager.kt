@@ -34,7 +34,6 @@ import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.fitquest.R
 import com.example.fitquest.ReadStepWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -276,28 +275,37 @@ enum class HealthConnectAvailability {
     NOT_SUPPORTED
 }
 
-sealed class ExerciseType(val exerciseType: Int, val titleResId: Int) {
+sealed class ExerciseType(val exerciseType: Int) {
     data object Running : ExerciseType(
         ExerciseSessionRecord.EXERCISE_TYPE_RUNNING,
-        R.string.running
     )
 
     data object Walking : ExerciseType(
-        ExerciseSessionRecord.EXERCISE_TYPE_WALKING,
-        R.string.walking
+        ExerciseSessionRecord.EXERCISE_TYPE_WALKING
     )
 
     data object Other : ExerciseType(
-        ExerciseSessionRecord.EXERCISE_TYPE_OTHER_WORKOUT,
-        R.string.other
+        ExerciseSessionRecord.EXERCISE_TYPE_OTHER_WORKOUT
     )
+
+    data object None : ExerciseType(-1)
 
     companion object {
         fun toExerciseType(exerciseType: String): ExerciseType {
             return when (exerciseType) {
                 "Running" -> Running
                 "Walking" -> Walking
-                else -> Other
+                "Other" -> Other
+                else -> None
+            }
+        }
+
+        fun getExerciseType(exerciseType: Int): String {
+        return when (exerciseType) {
+                ExerciseSessionRecord.EXERCISE_TYPE_RUNNING -> "Running"
+                ExerciseSessionRecord.EXERCISE_TYPE_WALKING -> "Walking"
+                ExerciseSessionRecord.EXERCISE_TYPE_OTHER_WORKOUT -> "Other"
+                else -> "None"
             }
         }
     }

@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -33,7 +32,6 @@ import com.example.fitquest.component.InstalledMessage
 import com.example.fitquest.component.NotInstalledMessage
 import com.example.fitquest.component.NotSupportedMessage
 import com.example.fitquest.data.HealthConnectAvailability
-import com.example.fitquest.ui.theme.FitQuestTheme
 
 /**
  * Welcome screen shown when the app is first launched.
@@ -43,6 +41,7 @@ fun WelcomeScreen(
     healthConnectAvailability: HealthConnectAvailability,
     onResumeAvailabilityCheck: () -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    onSignInWithGoogleClick: () -> Unit
 ) {
     val currentOnAvailabilityCheck by rememberUpdatedState(onResumeAvailabilityCheck)
 
@@ -77,7 +76,7 @@ fun WelcomeScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
         when (healthConnectAvailability) {
-            HealthConnectAvailability.INSTALLED -> InstalledMessage()
+            HealthConnectAvailability.INSTALLED ->  InstalledMessage()//SignInScreen( onSignInWithGoogleClick )
             HealthConnectAvailability.NOT_INSTALLED -> NotInstalledMessage()
             HealthConnectAvailability.NOT_SUPPORTED -> NotSupportedMessage()
         }
@@ -85,35 +84,3 @@ fun WelcomeScreen(
 }
 
 
-@Preview
-@Composable
-fun InstalledMessagePreview() {
-    FitQuestTheme {
-        WelcomeScreen(
-            healthConnectAvailability = HealthConnectAvailability.INSTALLED,
-            onResumeAvailabilityCheck = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun NotInstalledMessagePreview() {
-    FitQuestTheme {
-        WelcomeScreen(
-            healthConnectAvailability = HealthConnectAvailability.NOT_INSTALLED,
-            onResumeAvailabilityCheck = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun NotSupportedMessagePreview() {
-    FitQuestTheme {
-        WelcomeScreen(
-            healthConnectAvailability = HealthConnectAvailability.NOT_SUPPORTED,
-            onResumeAvailabilityCheck = {}
-        )
-    }
-}

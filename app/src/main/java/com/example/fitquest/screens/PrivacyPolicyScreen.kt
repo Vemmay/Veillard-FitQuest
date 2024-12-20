@@ -16,28 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.example.fitquest.R
 
 @Composable
-fun LeaderboardScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Leaderboard Coming Soon")
-    }
-}
-
-@Composable
-fun ChallengesScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Challenges Under Construction")
-    }
-}
-
-@Composable
 fun PrivacyPolicyScreen(){
     Column(
         modifier = Modifier
@@ -54,14 +32,3 @@ fun PrivacyPolicyScreen(){
         Text(text = "This is a sample privacy policy.")
     }
 }
-
-@Composable
-fun ProfileScreen(){
-    Text("Profile Coming Soon")
-}
-
-@Composable
-fun ChallengeScreen(){
-    Text("Challenge Coming Soon")
-}
-

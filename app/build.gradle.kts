@@ -1,6 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
+
+    //ksp
+    id("com.google.devtools.ksp") version "2.0.21-1.0.27" // Use the latest KSP version
+
 }
 
 android {
@@ -67,6 +72,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.googleid)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,6 +80,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation ("com.google.firebase:firebase-auth:22.0.1")
+    implementation ("com.google.firebase:firebase-analytics:21.0.0")
+
 
     // Health Connect
     implementation("androidx.health.connect:connect-client:1.1.0-alpha10")
@@ -85,20 +95,15 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
-
-    // for firebase authentication
-    // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-
-
-    // Add the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-auth")
-
+    implementation("androidx.room:room-ktx:2.6.1")
+    // To use Kotlin annotation processing tool (kapt)
+    ksp("androidx.room:room-compiler:2.6.1")
 
     // for Google Credential Manager
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.2.2")
 
 }

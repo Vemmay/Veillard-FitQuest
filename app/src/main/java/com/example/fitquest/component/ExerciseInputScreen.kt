@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -18,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -27,13 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.fitquest.ExerciseInput
 import com.example.fitquest.component.compose_icons.Calendar_clock
-import com.example.fitquest.component.compose_icons.Timer
 import com.example.fitquest.data.ExerciseType
-import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,13 +49,15 @@ fun ExerciseInputScreen(
 
     var expanded by remember { mutableStateOf(false) }
     val userExerciseInput = (remember { mutableStateOf(exerciseInput) }).value
-    var showTimePicker by remember { mutableStateOf(false) }
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
+    //var validInput by remember { mutableStateOf(false) }
 
     BasicAlertDialog(
         onDismissRequest = onDismiss,
         Modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(Color(0xFFBB86FC))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
     ) {
         // Exercise Input UI
         Column(modifier = Modifier.padding(16.dp)) {
@@ -71,28 +72,44 @@ fun ExerciseInputScreen(
                 label = { Text(text = "Title") }
             )
 
-            // Start Time Picker
-            Text("Start Time:")
-            Button(onClick = { showTimePicker = true }
-            ){
-                Icon(Calendar_clock, contentDescription = "Timer")
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
-            if (showTimePicker) {
-                ShowTimePicker(
-                    onTimeSelected = { selectedTime ->
-                        userExerciseInput.startTime = selectedTime.toZonedDateTime()
-                    },
-                    onDismiss = { showTimePicker = false }
-                )
-            }
+            Row (horizontalArrangement = Arrangement.SpaceEvenly) {
+                Button(onClick = { showStartTimePicker = true }
+                ){
+                    Icon(Calendar_clock, contentDescription = "Timer")
+                    // Start Time Picker
+                    Text("Start")
+                }
 
-            // Duration Picker
-            Text("Duration:")
-            Button(onClick = { userExerciseInput.duration = 10.minutes })
-            {
-                Icon(Timer, contentDescription = "Timer")
+                if (showStartTimePicker) {
+                    ShowTimePicker(
+                        onTimeSelected = { selectedTime ->
+                            userExerciseInput.startTime = selectedTime.toZonedDateTime()
+                        },
+                        onDismiss = { showStartTimePicker = false }
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(72.dp))
+
+                Button(onClick = { showEndTimePicker = true }
+                ) {
+                    Icon(Calendar_clock, contentDescription = "Timer")
+                    // End Time Picker
+                    Text("End")
+                }
+
+                if (showEndTimePicker) {
+                    ShowTimePicker(
+                        onTimeSelected = { selectedTime ->
+                            userExerciseInput.endTime = selectedTime.toZonedDateTime()
+                        },
+                        onDismiss = { showEndTimePicker = false }
+                    )
+                }
             }
+            Spacer(modifier = Modifier.height(16.dp))
 
             // UI for Exercise Type Dropdown
             var dropdownText by remember { mutableStateOf("") }
@@ -128,7 +145,7 @@ fun ExerciseInputScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row (horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row (horizontalArrangement = Arrangement.SpaceEvenly) {
                 // Insert Button
                 Button(
                     onClick = {
@@ -142,6 +159,7 @@ fun ExerciseInputScreen(
                         contentDescription = "Add Exercise",
                     )
                 }
+                Spacer(modifier = Modifier.width(120.dp))
 
                 // Cancel Button
                 Button(
@@ -153,4 +171,8 @@ fun ExerciseInputScreen(
             }
         }
     }
+}
+
+private fun ExerciseInput.isValid(): Boolean {
+    return exerciseTitle.isNotEmpty()
 }

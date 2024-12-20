@@ -19,8 +19,8 @@ import com.example.fitquest.component.compose_icons.Directions_run
 import com.example.fitquest.component.compose_icons.Settings_account_box
 import com.example.fitquest.component.compose_icons.Trophy
 import com.example.fitquest.data.HealthConnectManager
+import com.example.fitquest.data.database.UserDao
 import com.example.fitquest.data.showExceptionSnackbar
-import com.example.fitquest.screens.ChallengeScreen
 import com.example.fitquest.screens.ExerciseSessionScreen
 import com.example.fitquest.screens.LeaderboardScreen
 import com.example.fitquest.screens.PrivacyPolicyScreen
@@ -37,31 +37,44 @@ import com.example.fitquest.screens.WelcomeScreen
  *     all screens in the navigation graph are intended to be directly reached from the menu).
  */
 sealed class Screen(val route: String, val titleId: Int, val icon: ImageVector) {
-    data object WelcomeScreen : Screen("welcome", R.string.home_screen, Icons.Filled.Home)
     data object ExerciseSessions : Screen("exercise_sessions", R.string.exercise_sessions, Directions_run)
     data object Leaderboard : Screen("exercise_session_detail", R.string.leaderboard_screen, Trophy)
-    data object Challenge : Screen("challenge", R.string.challenge_screen, Icons.Filled.Build)
     data object Profile : Screen("profile", R.string.profile_screen, Settings_account_box)
     data object ExerciseSessionDetail : Screen("exercise_session_detail", R.string.exercise_session_detail, Icons.Filled.Build)
     data object PrivacyPolicy : Screen("privacy_policy", R.string.privacy_policy, Icons.Filled.Build)
+    data object SignIn : Screen("sign_in", R.string.sign_in, Icons.Filled.Home)
+    data object WelcomeScreen : Screen("welcome_screen", R.string.welcome_screen, Icons.Filled.Home)
 }
-
 
 @Composable
 fun FitQuestNavigation(
     navController: NavHostController,
     healthConnectManager: HealthConnectManager,
     healthConnectRepository: HealthConnectRepository,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    userDao: UserDao,
+    activity: MainActivity
 ) {
     val scope = rememberCoroutineScope()
-    NavHost(navController = navController, startDestination = Screen.WelcomeScreen.route) {
+    NavHost(navController = navController, startDestination = Screen.SignIn.route) {
         val availability by healthConnectManager.availability
-        composable(Screen.WelcomeScreen.route) {
+        composable(Screen.SignIn.route) {
+            val signInViewModel = SignInViewModel()
             WelcomeScreen(
                 healthConnectAvailability = availability,
                 onResumeAvailabilityCheck = {
                     healthConnectManager.checkAvailability()
+                },
+                onSignInWithGoogleClick = {
+                    signInViewModel.signInWithGoogle(
+                        context = activity,
+                        onSuccess = { user ->
+                            navController.navigate(Screen.ExerciseSessions.route)
+                        },
+                        onFailure = { exception ->
+                            showExceptionSnackbar(snackbarHostState, scope, exception)
+                        }
+                    )
                 }
             )
         }
@@ -123,14 +136,16 @@ fun FitQuestNavigation(
         ) {
             PrivacyPolicyScreen()
         }
+        composable(Screen.Leaderboard.route) {
+            val viewModel: LeaderboardViewModel = viewModel(
+                factory = LeaderboardViewModelFactory(
+                    userDao = userDao
+                )
+            )
+            LeaderboardScreen( viewModel = viewModel )
+        }
         composable(Screen.Profile.route) {
             ProfileScreen()
-        }
-        composable(Screen.Leaderboard.route) {
-            LeaderboardScreen()
-        }
-        composable(Screen.Challenge.route) {
-            ChallengeScreen()
         }
     }
 }

@@ -20,11 +20,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitquest.component.BottomNavigationBar
 import com.example.fitquest.data.HealthConnectManager
+import com.example.fitquest.data.database.AppDatabase
+import com.example.fitquest.data.database.UserDao
 import com.example.fitquest.ui.theme.FitQuestTheme
 import com.google.firebase.FirebaseApp
 
@@ -32,23 +35,33 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val healthConnectManager = (application as BaseApplication).healthConnectManager
+        val database = AppDatabase.getDatabase(this)
+        UserDataInitializer.initializeUsers(this)
+
 
         setContent {
-            MainScreen(healthConnectManager = healthConnectManager)
+            MainScreen(
+                healthConnectManager = healthConnectManager,
+                userDao = database.userDao(),
+                context = this
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(healthConnectManager: HealthConnectManager) {
-    FitQuestTheme {
+fun MainScreen(
+    healthConnectManager: HealthConnectManager,
+    userDao: UserDao,
+    context: MainActivity
+) {
+    FitQuestTheme  {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         val healthConnectRepository = HealthConnectRepository(healthConnectManager)
         val snackbarHostState = remember { SnackbarHostState() }
-
         val availability by healthConnectManager.availability
 
         Scaffold(
@@ -63,11 +76,13 @@ fun MainScreen(healthConnectManager: HealthConnectManager) {
                         }
                         Text(
                             stringResource(titleId),
-                            color = MaterialTheme.colorScheme.background,
-                            style = MaterialTheme.typography.titleLarge
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            style = MaterialTheme.typography.headlineSmall,
+                            // center
+                            textAlign = TextAlign.Center,
                         )
                     },
-                    colors = TopAppBarDefaults.topAppBarColors( containerColor = MaterialTheme.colorScheme.onBackground )
+                    colors = TopAppBarDefaults.topAppBarColors( containerColor = MaterialTheme.colorScheme.primaryContainer, titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer)
                 )
             },
             bottomBar = {
@@ -84,17 +99,20 @@ fun MainScreen(healthConnectManager: HealthConnectManager) {
                     .fillMaxSize()
                     .padding(innerPadding)
                     .padding(8.dp),
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.surface
             ) {
+
                 Box(modifier = Modifier.fillMaxSize()) {
                     FitQuestNavigation(
                         navController = navController,
                         healthConnectManager = healthConnectManager,
                         healthConnectRepository = healthConnectRepository,
-                        snackbarHostState = snackbarHostState
+                        snackbarHostState = snackbarHostState,
+                        userDao = userDao,
+                        activity = context
                     )
-                }
             }
+        }
         }
     }
 }

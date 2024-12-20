@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.time.ZonedDateTime
 import java.util.UUID
-import kotlin.time.Duration
 
 class ExerciseSessionViewModel(
     private val healthConnectManager: HealthConnectManager,
@@ -91,7 +90,7 @@ class ExerciseSessionViewModel(
                 healthConnectRepository.addExerciseSession(
                     exerciseInput.exerciseTitle,
                     exerciseInput.startTime,
-                    exerciseInput.startTime.plusMinutes(exerciseInput.duration.inWholeMinutes),
+                    exerciseInput.endTime,
                     exerciseInput.type
                 )
                 readExerciseSessions()
@@ -158,11 +157,11 @@ class ExerciseSessionViewModel(
 data class ExerciseInput(
     var exerciseTitle: String,
     var startTime: ZonedDateTime,
-    var duration: Duration,
+    var endTime: ZonedDateTime,
     var type: ExerciseType
 ) {
     companion object {
-        val EMPTY = ExerciseInput("", ZonedDateTime.now(), Duration.ZERO, ExerciseType.Running)
+        val EMPTY = ExerciseInput("", ZonedDateTime.now(), ZonedDateTime.now(), ExerciseType.None)
     }
 }
 

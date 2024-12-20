@@ -2,38 +2,26 @@ package com.example.fitquest.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fitquest.SignInViewModel
 
 
 @Composable
-fun LoginUI(
-    onSignInClick: (String, String) -> Unit,
-    onSignInWithGoogleClick: () -> Unit,
-    onSignUpClick: (String, String) -> Unit
-) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isSignUpMode by remember { mutableStateOf(true) }
+fun SignInScreen(onSignInWithGoogleClick: () -> Unit) {
+    val signInViewModel = SignInViewModel()
 
     Column(verticalArrangement = Arrangement.Bottom,modifier = Modifier
         .padding(horizontal = 26.dp)
@@ -44,49 +32,29 @@ fun LoginUI(
             start = Offset(0f, 100f),
             end = Offset(40f, 0f)
         )
-        Text("Create Your\n" +
-                "Free Account", style = MaterialTheme.typography.headlineSmall.copy(fontSize = 26.sp, lineHeight = 36.sp, brush = gradient),
+        Text(
+            "Create Your\n" +
+                    "Free Account",
+            style = MaterialTheme.typography.headlineSmall.copy(
+                fontSize = 26.sp,
+                lineHeight = 36.sp,
+                brush = gradient
+            ),
             color = Color(0xFF0A0000),
             modifier = Modifier.padding(14.dp).padding(bottom = 25.dp)
         )
 
-        Button (
+        Button(
             onClick = onSignInWithGoogleClick,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 disabledContentColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant)
+                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         ) {
             Text("Continue With Google")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                if (isSignUpMode) {
-                    onSignUpClick(email, password)
-                } else {
-                    onSignInClick(email, password)
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (isSignUpMode) "Sign Up" else "Sign In",   modifier = Modifier.padding(6.dp))
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextButton(
-            onClick = { isSignUpMode = !isSignUpMode },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                if (isSignUpMode) "Already have an account? Sign In"
-                else "Don't have an account? Sign Up", color = Color.White
-            )
         }
     }
 }
